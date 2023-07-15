@@ -6,15 +6,15 @@
 
 [NEAT]
 fitness_criterion      = max
-fitness_threshold      = 475
-pop_size               = 50
+fitness_threshold      = 500
+pop_size               = 100
 reset_on_extinction    = False
 no_fitness_termination = False
-generations            = 100
+generations            = 1000
 
 [Gym]
 environment = CartPole-v1
-episode_reps = 10
+episode_reps = 100
 
 [Substrate]
 # For (ES-)HyperNEAT
