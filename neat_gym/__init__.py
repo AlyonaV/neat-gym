@@ -85,7 +85,7 @@ def eval_net(
         report=False,
         record_dir=None,
         activations=1,
-        seed=None,
+        seed=42,
         max_episode_steps=None,
         csvfilename=None):
     '''
@@ -103,8 +103,12 @@ def eval_net(
     if record_dir is not None:
         env = wrappers.Monitor(env, record_dir, force=True)
 
+
+
+    #state = env.reset(seed = seed)[0]
     env.seed(seed)
     state = env.reset()
+
     total_reward = 0
     steps = 0
 
@@ -127,6 +131,7 @@ def eval_net(
                   if is_discrete else action * env.action_space.high)
 
         state, reward, done, _ = env.step(action)
+        #state, reward, terminated, truncated, info = env.step(action)
 
         if csvfile is not None:
 
@@ -140,12 +145,13 @@ def eval_net(
             fmt = ('%f,' * len(state))[:-1] + '\n'
             csvfile.write(fmt % tuple(state))
 
-        if render or (record_dir is not None):
-            env.render()
-            time.sleep(.02)
+        #if render or (record_dir is not None):
+        #    env.render()
+        #    time.sleep(.02)
 
         total_reward += reward
 
+        #if terminated or truncated:
         if done:
             break
 

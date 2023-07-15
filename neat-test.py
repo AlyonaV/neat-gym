@@ -16,6 +16,7 @@ net, env_name, record_dir, seed, nodisplay, csvfilename = \
 
 # Run the network on the environment
 eval_net(net,
+         #gym.make(env_name, render_mode='human'),
          gym.make(env_name),
          render=(not nodisplay),
          record_dir=record_dir,
