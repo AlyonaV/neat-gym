@@ -11,7 +11,10 @@ import pickle
 import time
 
 import gym
+import panda_gym
 from gym import wrappers
+import pybullet_envs
+
 import numpy as np
 
 
@@ -21,6 +24,8 @@ def _gym_make(envname):
 
     try:
         env = gym.make(envname)
+        print("Environment observation space: ", env.observation_space)
+        print("Environment action space: ", env.action_space)
 
     except Exception as e:
         print('Unable to make environment %s: %s' %
@@ -86,7 +91,7 @@ def eval_net(
         record_dir=None,
         activations=1,
         seed=42,
-        max_episode_steps=None,
+        max_episode_steps=400,
         csvfilename=None):
     '''
     Evaluates a network
@@ -103,12 +108,10 @@ def eval_net(
     if record_dir is not None:
         env = wrappers.Monitor(env, record_dir, force=True)
 
-
-
     #state = env.reset(seed = seed)[0]
-    env.seed(seed)
-    state = env.reset()
-
+    #env.seed(seed)
+    state, info = env.reset()
+    #state = observation['observation'] 
     total_reward = 0
     steps = 0
 
@@ -130,9 +133,9 @@ def eval_net(
         action = (np.argmax(action)
                   if is_discrete else action * env.action_space.high)
 
-        state, reward, done, _ = env.step(action)
-        #state, reward, terminated, truncated, info = env.step(action)
-
+        #state, reward, done, info = env.step(action)
+        state, reward, terminated, truncated, info = env.step(action)
+        #state = observation['observation']
         if csvfile is not None:
 
             if is_discrete:
@@ -151,8 +154,8 @@ def eval_net(
 
         total_reward += reward
 
-        #if terminated or truncated:
-        if done:
+        if terminated or truncated:
+        #if done:
             break
 
         steps += 1
